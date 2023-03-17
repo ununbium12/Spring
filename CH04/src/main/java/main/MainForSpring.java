@@ -1,21 +1,21 @@
 package main;
 
-import assembler.Assembler;
-import chapter03.ChangePasswordService;
-import chapter03.DuplicationMemberException;
-import chapter03.MemberNotFoundException;
-import chapter03.MemberRegisterService;
-import chapter03.RegisterRequest;
-import chapter03.WrongPasswordException;
+import chapter03.*;
+import config.AppContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.Buffer;
 
-public class MainForAssembler {
+public class MainForSpring {
 
-    private static Assembler assembler = new Assembler();
+    private static ApplicationContext ctx;
     public static void main(String[] args) throws IOException {
+
+        ctx = new AnnotationConfigApplicationContext(AppContext.class);
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         while(true) {
             System.out.println("명령어를 입력하세요.");
@@ -30,6 +30,15 @@ public class MainForAssembler {
             } else if(command.startsWith("change")) {
                 processChangeCommand(command.split(" "));
                 continue;
+            } else if (command.startsWith("list")) {
+                processListCommand();
+                continue;
+            } else if (command.startsWith("info")) {
+                processInfoCommand(command.split(" "));
+                continue;
+            } else if (command.startsWith("version")) {
+                processVersionCommand();
+                continue;
             }
             printHelp();
         }
@@ -41,7 +50,7 @@ public class MainForAssembler {
             return;
         }
 
-        MemberRegisterService memberRegisterService = assembler.getMemberRegisterService();
+        MemberRegisterService memberRegisterService = ctx.getBean("memberRegisterService", MemberRegisterService.class);
         // {new, 이메일, 이름, 비밀번호, 비밀번호 확인}
         RegisterRequest req = new RegisterRequest();
         req.setEmail(arg[1]);
@@ -68,7 +77,7 @@ public class MainForAssembler {
             return;
         }
         // change email oldPassword 
-        ChangePasswordService changePasswordService = assembler.getChangePasswordService();
+        ChangePasswordService changePasswordService = ctx.getBean("changePasswordService", ChangePasswordService.class);
         try {
             changePasswordService.changePassword(arg[1], arg[2], arg[3]);
             System.out.println("암호를 변경했습니다.");
@@ -84,6 +93,25 @@ public class MainForAssembler {
         System.out.println("잘못된 명령입니다. 아래 명령어 사용법을 확인하세요.");
         System.out.println("new 이메일 이름 암호 암호확인");
         System.out.println("change 이메일 현재암호 변경암호");
+        System.out.println("info 이메일");
         System.out.println();
+    }
+
+    private static void processListCommand() {
+        MemberListPrinter memberListPrinter =
+                ctx.getBean("memberListPrinter", MemberListPrinter.class);
+        memberListPrinter.printAll();
+    }
+
+    private static void processInfoCommand(String[] arg) {
+        MemberInfoPrinter memberInfoPrinter =
+                ctx.getBean("memberInfoPrinter", MemberInfoPrinter.class);
+        memberInfoPrinter.printMemberInfo(arg[1]);
+    }
+
+    private static void processVersionCommand () {
+        VersionPrinter versionPrinter =
+                ctx.getBean("versionPrinter", VersionPrinter.class);
+        versionPrinter.print();
     }
 }
