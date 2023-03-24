@@ -2,7 +2,9 @@ package chapter03;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
+@Component("memberInfoPrinter")
 public class MemberInfoPrinter {
 
     // 메서드명 : printMemberInfo

@@ -1,2 +1,5 @@
-package chapter05;public class MemberRegisterService {
+package chapter05;
+
+public class MemberRegisterService {
+
 }
