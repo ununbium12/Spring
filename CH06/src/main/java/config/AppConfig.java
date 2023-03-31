@@ -1,5 +1,6 @@
 package config;
 
+import aspect.CacheAspect;
 import aspect.ExeTimeAspect;
 import chapter06.Calculator;
 import chapter06.RecCalculator;
@@ -9,7 +10,13 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
 @EnableAspectJAutoProxy
-public class AppContext {
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
+public class AppConfig {
+
+    @Bean
+    public CacheAspect cacheAspect() {
+        return new CacheAspect();
+    }
 
     @Bean
     public ExeTimeAspect exeTimeAspect() {
