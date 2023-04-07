@@ -15,48 +15,42 @@ public class MainForMemberDao {
 
     private static MemberDao memberDao;
 
-    private static ChangePasswordService changePasswordService;
-
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext ctx =
-                new AnnotationConfigApplicationContext(AppConfig.class);
-        memberDao = ctx.getBean("memberDao", MemberDao.class);
-        changePasswordService = ctx.getBean("changePasswordService", ChangePasswordService.class);
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
 
+        memberDao = ctx.getBean("memberDao", MemberDao.class);
         selectAll();
-//        update();
-        insert();
-        selectAll();
-//        Member member = memberDao.selectByEmail("a@a.com");
-//        System.out.println(member.getId()+","+ member.getEmail()+","+ member.getName());
+        updateMember();
+        insertMember();
     }
 
-    public static void selectAll() {
+    private static void selectAll() {
+        System.out.println("---- SelectAll() ----");
         int count = memberDao.count();
-        System.out.println("count : "+count);
-        List<Member> memberList = memberDao.selectAll();
-        for(Member member : memberList) {
-            System.out.println(member.getId()+","+ member.getEmail()+","+ member.getName());
+        System.out.println("total count : "+ count);
+
+        List<Member>  members = memberDao.selectAll();
+        for(Member m : members) {
+            System.out.println(m.getId()+":"+m.getEmail()+":"+m.getName());
         }
     }
 
-    public static void update() {
+    private static void updateMember() {
+        System.out.println("---- UpdateMember ----");
         Member member = memberDao.selectByEmail("a@a.com");
-        String oldPassword = member.getPassword();
-        String newPassword = Double.toHexString(Math.random());
-        changePasswordService.changePassword("a@a.com");
-//         member.changePassword(oldPassword, newPassword);
+        String oldPw = member.getPassword();
+        String newPw = Double.toHexString(Math.random());
+        member.changePassword(oldPw, newPw);
         memberDao.update(member);
-        System.out.println("ChangePassword : " + oldPassword + " -> " + newPassword);
+        System.out.println("changePassword : "+ oldPw +">>"+ newPw);
     }
 
-    private static DateTimeFormatter formatter =
-            DateTimeFormatter.ofPattern("MMddHHmmss");
-
-    public static void insert() {
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddHHmmss");
+    private static void insertMember() {
+        System.out.println("---- InsertMember ----");
         String prefix = formatter.format(LocalDateTime.now());
         Member member = new Member(prefix+"@test.com", prefix, prefix, LocalDateTime.now());
         memberDao.insert(member);
-        System.out.println("Insert Mamber >>> " + member.getName() + ", " + member.getId());
+        System.out.println("insert : "+member.getId());
     }
 }

@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HelloController {
 
     @GetMapping("/hello")
-    public String hello(Model model, @RequestParam(value = "name", required = false) String name) {
-        System.out.println("Hello >>> ");
-        model.addAttribute("greeting", "Hi, " + name);
+    public String hello(Model model, @RequestParam(value="name", required = false) String name) {
+        System.out.println("Hello Controller >>> ");
+        model.addAttribute("greeting", "안녕하세요,"+name);
         return "hello";
     }
 }
