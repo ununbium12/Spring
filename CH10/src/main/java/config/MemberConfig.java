@@ -3,6 +3,7 @@ package config;
 import chapter10.ChangePasswordService;
 import chapter10.MemberDao;
 import chapter10.MemberRegisterService;
+import chapter11.AuthService;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,5 +47,10 @@ public class MemberConfig {
     @Bean
     public ChangePasswordService changePasswordService() {
         return new ChangePasswordService();
+    }
+
+    @Bean
+    public AuthService authService() {
+        return new AuthService();
     }
 }

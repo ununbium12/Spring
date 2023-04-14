@@ -9,12 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/register")
-public class RegistController {
+public class RegisterController {
 
     @RequestMapping("/step1")
     public String handleStep1() {
