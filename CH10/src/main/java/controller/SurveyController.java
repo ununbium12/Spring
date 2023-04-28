@@ -1,39 +1,66 @@
 package controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import survey.Survey;
+import survey.SurveyDao;
 import survey.SurveyRegisterService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
+@RequestMapping("/survey")
 public class SurveyController {
 
     private SurveyRegisterService surveyRegisterService;
 
-    public void setSurveyController(SurveyRegisterService surveyRegisterService) {
+
+    @Autowired
+    public SurveyController(SurveyRegisterService surveyRegisterService) {
         this.surveyRegisterService = surveyRegisterService;
     }
 
-    // 설문조사 페이지 요청 처리
-    @GetMapping("/survey")
-    public String surveyForm() {
+    @GetMapping("/surveyForm")
+    public String surveyForm(Model model) {
+        model.addAttribute("surveyCommand", new SurveyCommand());
         return "survey/surveyForm";
     }
 
-    // 설문조사 제출 처리
-    @PostMapping("/survey")
-    public String submitSurvey(@ModelAttribute("surveyCommand") @Valid SurveyCommand surveyCommand, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+    @PostMapping("/surveyForm")
+    public String handleSurveyFormPost(
+            @ModelAttribute("surveyCommand") @Valid SurveyCommand surveyCommand, Errors errors) {
+        if (errors.hasErrors()) {
+            return "/survey/surveyForm";
+        }
+        surveyRegisterService.update(surveyCommand);
+        return "redirect:/survey/surveyComplete";
+    }
+
+    @PostMapping("/surveyComplete")
+    public String surveyComplete(@Valid @ModelAttribute("surveyCommand") SurveyCommand surveyCommand, BindingResult result, Model model) {
+        if(result.hasErrors()) {
             return "survey/surveyForm";
         }
+        Survey survey = new Survey(surveyCommand);
+        surveyDao.insert(survey);
+        model.addAttribute("surveyCommand", surveyCommand);
+        return "survey/surveyComplete";
+    }
 
-        surveyRegisterService.register(surveyCommand);
+    @Autowired
+    private SurveyDao surveyDao;
 
-        return "survey/submitComplete";
+    @RequestMapping(value = "/surveyList")
+    public ModelAndView list() {
+        List<Survey> list = surveyDao.selectAll();
+        ModelAndView mav = new ModelAndView("survey/surveyList");
+        mav.addObject("list", list);
+        return mav;
     }
 }

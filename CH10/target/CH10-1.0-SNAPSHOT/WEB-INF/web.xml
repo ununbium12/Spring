@@ -17,6 +17,7 @@
                 config.MvcConfig
                 config.ControllerConfig
                 config.MemberConfig
+                config.SurveyConfig
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
@@ -26,5 +27,17 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 </web-app>

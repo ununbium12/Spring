@@ -1,57 +1,50 @@
 package survey;
 
+import controller.SurveyCommand;
+
 import java.time.LocalDateTime;
 
 public class Survey {
 
     private Long id;
-
-    private String Q1;
-
-    private String Q2;
-
-    private String Q3;
-
+    private String q1;
+    private String q2;
+    private String q3;
     private String RespondentName;
-
     private int RespondentAge;
-
     private LocalDateTime REGDATE;
 
-    public Survey(String Q1, String Q2, String Q3, String RespondentName, int RespondentAge, LocalDateTime REGDATE) {
-        this.Q1 = Q1;
-        this.Q2 = Q2;
-        this.Q3 = Q3;
+    public Survey(String q1, String q2, String q3, String RespondentName, int RespondentAge, LocalDateTime REGDATE) {
+        this.q1 = q1;
+        this.q2 = q2;
+        this.q3 = q3;
         this.RespondentName = RespondentName;
         this.RespondentAge = RespondentAge;
         this.REGDATE = REGDATE;
     }
+
+    void setId(long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getQ1() {
-        return Q1;
+        return q1;
     }
 
     public String getQ2() {
-        return Q2;
+        return q2;
     }
 
     public String getQ3() {
-        return Q3;
+        return q3;
     }
 
     public String getRespondentName() {
         return RespondentName;
-    }
-
-    public void setRespondentAge(int respondentAge) {
-        this.RespondentAge = respondentAge;
     }
 
     public int getRespondentAge() {
@@ -62,7 +55,13 @@ public class Survey {
         return REGDATE;
     }
 
-    public void setREGDATE(LocalDateTime REGDATE) {
-        this.REGDATE = REGDATE;
+    public Survey(SurveyCommand surveyCommand) {
+        this.q1 = surveyCommand.getQ1();
+        this.q2 = surveyCommand.getQ2();
+        this.q3 = surveyCommand.getQ3();
+        this.RespondentName = surveyCommand.getRespondentName();
+        this.RespondentAge = surveyCommand.getRespondentAge();
+        this.REGDATE = LocalDateTime.now();
     }
+
 }

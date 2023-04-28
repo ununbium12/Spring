@@ -4,6 +4,8 @@ import chapter10.Member;
 import chapter10.MemberDao;
 import chapter10.WrongPasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
+import survey.Survey;
+import survey.SurveyDao;
 
 public class AuthService {
 
@@ -16,4 +18,5 @@ public class AuthService {
         if (!member.matchPassword(password)) throw new WrongPasswordException();
         return new AuthInfo(member.getId(), member.getEmail(), member.getName());
     }
+
 }

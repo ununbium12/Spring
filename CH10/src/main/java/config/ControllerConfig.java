@@ -1,15 +1,14 @@
 package config;
 
 import chapter11.AuthService;
-import controller.HelloController;
-import controller.LoginController;
-import controller.MainController;
-import controller.RegisterController;
-import controller.SurveyController;
+import controller.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import survey.SurveyDao;
 import survey.SurveyRegisterService;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class ControllerConfig {
@@ -21,13 +20,13 @@ public class ControllerConfig {
     private SurveyRegisterService surveyRegisterService;
 
     @Bean
-    public MainController mainController() {
-        return new MainController();
+    public RegisterController registerController() {
+        return new RegisterController();
     }
 
     @Bean
-    public RegisterController registerController() {
-        return new RegisterController();
+    public MainController mainController() {
+        return new MainController();
     }
 
     @Bean
@@ -37,15 +36,23 @@ public class ControllerConfig {
 
     @Bean
     public SurveyController surveyController() {
-        SurveyController surveyController = new SurveyController();
-        surveyController.setSurveyController(surveyRegisterService);
-        return surveyController;
+        return new SurveyController(surveyRegisterService);
     }
 
     @Bean
     public LoginController loginController() {
-        LoginController loginController = new LoginController();
+        LoginController loginController= new LoginController();
         loginController.setAuthService(authService);
         return loginController;
+    }
+
+    @Bean
+    public SurveyRegisterService surveyRegisterService(SurveyDao surveyDao) {
+        return new SurveyRegisterService(surveyDao);
+    }
+
+    @Bean
+    public SurveyDao surveyDao(DataSource dataSource) {
+        return new SurveyDao(dataSource);
     }
 }

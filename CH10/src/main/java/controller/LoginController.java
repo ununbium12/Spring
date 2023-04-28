@@ -66,7 +66,7 @@ public class LoginController {
             response.addCookie(rememberCookie);
 
             return "login/loginSuccess";
-        }catch (WrongPasswordException ex) {
+        } catch (WrongPasswordException ex) {
             errors.reject("idPasswordNotMatching");
             return "login/loginForm";
         }
